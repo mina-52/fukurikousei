@@ -229,19 +229,25 @@
             <h2 id="modal-title">福利厚生の申し込み</h2>
             <form id="application-form">
                 <div class="form-group">
-                    <label for="applicant-name">お名前</label>
+                    <label for="selected-benefit">申し込み福利厚生</label>
+                    <select id="selected-benefit" required>
+                        <option value="">選択してください</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="applicant-name">お名前 <span class="required-mark">*</span></label>
                     <input type="text" id="applicant-name" required>
                 </div>
                 <div class="form-group">
-                    <label for="applicant-dept">所属部署</label>
+                    <label for="applicant-dept">所属部署 <span class="required-mark">*</span></label>
                     <input type="text" id="applicant-dept" required>
                 </div>
                 <div class="form-group">
-                    <label for="applicant-email">メールアドレス</label>
+                    <label for="applicant-email">メールアドレス <span class="required-mark">*</span></label>
                     <input type="email" id="applicant-email" required>
                 </div>
                 <div class="form-group">
-                    <label for="applicant-phone">電話番号</label>
+                    <label for="applicant-phone">電話番号 <span class="required-mark">*</span></label>
                     <input type="tel" id="applicant-phone" required>
                 </div>
                 <div class="form-group">

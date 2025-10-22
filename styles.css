@@ -9,7 +9,9 @@ body {
     background: linear-gradient(135deg, #006B54 0%, #004D40 100%);
     min-height: 100vh;
     padding: 20px;
-    color: #333;
+    color: #222;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 .container {
@@ -101,7 +103,8 @@ header h1 {
 .card h2 {
     color: #006B54;
     margin-bottom: 20px;
-    font-size: 1.5em;
+    font-size: 1.8em;
+    font-weight: 600;
 }
 
 /* フォーム */
@@ -112,18 +115,28 @@ header h1 {
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: #555;
-    font-weight: 500;
+    color: #333;
+    font-weight: 600;
+    font-size: 1.05em;
+}
+
+.required-mark {
+    color: #dc3545;
+    font-weight: bold;
 }
 
 .form-group input[type="text"],
-.form-group input[type="number"] {
+.form-group input[type="number"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group select {
     width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e0e0e0;
+    padding: 14px 16px;
+    border: 2px solid #d0d0d0;
     border-radius: 8px;
-    font-size: 1em;
+    font-size: 1.05em;
     transition: all 0.3s ease;
+    background: white;
 }
 
 .form-group input:focus {
@@ -222,53 +235,67 @@ header h1 {
     background: white;
     border: 2px solid #e0e0e0;
     border-radius: 12px;
-    padding: 20px;
+    padding: 25px;
     transition: all 0.3s ease;
+}
+
+.benefit-card.clickable-card {
     cursor: pointer;
 }
 
-.benefit-card:hover {
+.benefit-card.clickable-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 107, 84, 0.15);
+    border-color: #006B54;
+    background: #f8fffe;
+}
+
+.benefit-card:hover {
+    transform: translateY(-3px);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     border-color: #006B54;
 }
 
 .benefit-icon {
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    font-size: 3em;
+    margin-bottom: 12px;
 }
 
 .benefit-card h3 {
     color: #006B54;
-    margin-bottom: 10px;
-    font-size: 1.3em;
+    margin-bottom: 12px;
+    font-size: 1.4em;
+    font-weight: 600;
 }
 
 .benefit-card p {
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 10px;
+    color: #444;
+    line-height: 1.7;
+    margin-bottom: 12px;
+    font-size: 1.05em;
 }
 
 .benefit-card .benefit-amount {
     background: #e8f5f1;
     color: #006B54;
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 10px 16px;
+    border-radius: 8px;
     font-weight: bold;
     display: inline-block;
-    margin-top: 10px;
+    margin-top: 12px;
+    font-size: 1.05em;
 }
 
 .benefit-tag {
     display: inline-block;
     background: #d4ede7;
     color: #004D40;
-    padding: 4px 10px;
+    padding: 6px 14px;
     border-radius: 20px;
-    font-size: 0.85em;
+    font-size: 0.95em;
     margin-right: 5px;
-    margin-top: 5px;
+    margin-top: 8px;
+    font-weight: 500;
 }
 
 /* チャット */
@@ -550,16 +577,16 @@ header h1 {
 }
 
 .benefit-row-name {
-    font-weight: bold;
-    color: #333;
-    font-size: 1.1em;
-    margin-bottom: 5px;
+    font-weight: 600;
+    color: #222;
+    font-size: 1.2em;
+    margin-bottom: 6px;
 }
 
 .benefit-row-desc {
-    color: #666;
-    font-size: 0.9em;
-    line-height: 1.5;
+    color: #555;
+    font-size: 1em;
+    line-height: 1.6;
 }
 
 .benefit-row-amount {
@@ -578,10 +605,10 @@ header h1 {
 }
 
 .btn-quick {
-    padding: 8px 15px;
+    padding: 10px 18px;
     border: none;
-    border-radius: 6px;
-    font-size: 0.85em;
+    border-radius: 8px;
+    font-size: 0.95em;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -887,10 +914,10 @@ header h1 {
 
 .btn-apply, .btn-details, .btn-info {
     flex: 1;
-    padding: 10px 15px;
+    padding: 12px 18px;
     border: none;
     border-radius: 8px;
-    font-size: 0.9em;
+    font-size: 1em;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -989,8 +1016,10 @@ header h1 {
 
 .modal-content h2 {
     color: #006B54;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     padding-right: 30px;
+    font-size: 1.8em;
+    font-weight: 600;
 }
 
 .modal-content textarea {
@@ -1068,24 +1097,30 @@ header h1 {
 
 .step-text {
     flex: 1;
-    line-height: 1.6;
+    line-height: 1.7;
+    font-size: 1.05em;
+    color: #333;
 }
 
 .process-info {
     background: #e8f5f1;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 18px;
 }
 
 .process-info h4 {
     color: #006B54;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: 600;
 }
 
 .process-info p {
-    margin: 5px 0;
+    margin: 6px 0;
     color: #333;
+    font-size: 1.05em;
+    line-height: 1.6;
 }
 
 /* レスポンシブデザイン */

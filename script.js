@@ -572,16 +572,29 @@ function filterBenefits(userData) {
 // 福利厚生カードを作成
 function createBenefitCard(benefit) {
     const card = document.createElement('div');
-    card.className = 'benefit-card';
+    card.className = 'benefit-card clickable-card';
+    card.setAttribute('data-benefit-id', benefit.id);
+    
+    // カード全体をクリック可能に
+    card.addEventListener('click', (e) => {
+        // ボタンのクリックイベントと干渉しないように
+        if (!e.target.closest('button')) {
+            if (benefit.requiresApplication) {
+                openApplicationModal(benefit.id);
+            } else {
+                showBenefitInfo(benefit.id);
+            }
+        }
+    });
     
     const buttonsHTML = benefit.requiresApplication ? `
         <div class="benefit-actions">
-            <button class="btn-apply" onclick="openApplicationModal(${benefit.id})">📝 申し込む</button>
-            <button class="btn-details" onclick="showApplicationProcess(${benefit.id})">📋 手続き方法</button>
+            <button class="btn-apply" onclick="event.stopPropagation(); openApplicationModal(${benefit.id})">📝 申し込む</button>
+            <button class="btn-details" onclick="event.stopPropagation(); showApplicationProcess(${benefit.id})">📋 手続き方法</button>
         </div>
     ` : `
         <div class="benefit-actions">
-            <button class="btn-info" onclick="showBenefitInfo(${benefit.id})">ℹ️ 詳細情報</button>
+            <button class="btn-info" onclick="event.stopPropagation(); showBenefitInfo(${benefit.id})">ℹ️ 詳細情報</button>
         </div>
     `;
     
@@ -859,17 +872,55 @@ function clearData() {
 // モーダル操作関数
 let currentBenefitId = null;
 
-function openApplicationModal(benefitId) {
-    currentBenefitId = benefitId;
-    const benefit = benefitsDatabase.find(b => b.id === benefitId);
+function openApplicationModal(benefitId = null) {
     const modal = document.getElementById('application-modal');
     const modalTitle = document.getElementById('modal-title');
+    const benefitSelect = document.getElementById('selected-benefit');
     
-    modalTitle.textContent = `${benefit.icon} ${benefit.name} - 申し込み`;
+    // プルダウンに福利厚生を追加
+    populateBenefitSelect();
+    
+    if (benefitId) {
+        currentBenefitId = benefitId;
+        const benefit = benefitsDatabase.find(b => b.id === benefitId);
+        modalTitle.textContent = `${benefit.icon} ${benefit.name} - 申し込み`;
+        
+        // 選択された福利厚生を設定
+        benefitSelect.value = benefitId;
+        benefitSelect.disabled = true;
+    } else {
+        modalTitle.textContent = '福利厚生の申し込み';
+        benefitSelect.disabled = false;
+        currentBenefitId = null;
+    }
+    
     modal.classList.add('show');
     
-    // フォームをリセット
-    document.getElementById('application-form').reset();
+    // フォームをリセット（福利厚生選択以外）
+    document.getElementById('applicant-name').value = '';
+    document.getElementById('applicant-dept').value = '';
+    document.getElementById('applicant-email').value = '';
+    document.getElementById('applicant-phone').value = '';
+    document.getElementById('application-notes').value = '';
+}
+
+function populateBenefitSelect() {
+    const select = document.getElementById('selected-benefit');
+    
+    // 既存のオプションをクリア（最初の「選択してください」以外）
+    while (select.options.length > 1) {
+        select.remove(1);
+    }
+    
+    // 申し込み可能な福利厚生のみを追加
+    const applicableBenefits = benefitsDatabase.filter(b => b.requiresApplication);
+    
+    applicableBenefits.forEach(benefit => {
+        const option = document.createElement('option');
+        option.value = benefit.id;
+        option.textContent = `${benefit.icon} ${benefit.name}`;
+        select.appendChild(option);
+    });
 }
 
 function closeApplicationModal() {
@@ -988,8 +1039,16 @@ document.addEventListener('DOMContentLoaded', () => {
         applicationForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const benefit = benefitsDatabase.find(b => b.id === currentBenefitId);
+            // 選択された福利厚生IDを取得
+            const selectedBenefitId = parseInt(document.getElementById('selected-benefit').value);
+            if (!selectedBenefitId) {
+                alert('福利厚生を選択してください。');
+                return;
+            }
+            
+            const benefit = benefitsDatabase.find(b => b.id === selectedBenefitId);
             const formData = {
+                benefitId: benefit.id,
                 benefitName: benefit.name,
                 name: document.getElementById('applicant-name').value,
                 department: document.getElementById('applicant-dept').value,
@@ -1004,6 +1063,9 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(`${benefit.name}の申し込みを受け付けました！\n\n人事部より追って連絡いたします。\n申し込み内容がメールで送信されます。`);
             
             closeApplicationModal();
+            
+            // 福利厚生選択を再度有効化
+            document.getElementById('selected-benefit').disabled = false;
         });
     }
 });
