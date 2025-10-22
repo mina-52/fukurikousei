@@ -1,31 +1,53 @@
-// 検索履歴データ（LocalStorageに保存）
-let searchAnalytics = {
-    searches: [], // { keyword, timestamp, benefits: [] }
-    benefitCounts: {}, // benefitId: count
-    categoryCounts: {} // category: count
-};
-
-// LocalStorageから検索履歴を読み込む
-function loadAnalytics() {
-    const saved = localStorage.getItem('mki_search_analytics');
-    if (saved) {
-        searchAnalytics = JSON.parse(saved);
-    }
-}
-
-// LocalStorageに検索履歴を保存
-function saveAnalytics() {
-    localStorage.setItem('mki_search_analytics', JSON.stringify(searchAnalytics));
-}
-
 // 福利厚生データベース
 const benefitsDatabase = [
     {
         id: 1,
         icon: "💰",
-        name: "住宅手当",
-        description: "賃貸住宅にお住まいの方に月額最大3万円を支給します。",
-        amount: "最大30,000円/月",
+        name: "賞与",
+        description: "年2回（夏・冬）、会社全体および個人の業績を考慮して支給されます。",
+        amount: "年2回支給",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["賞与", "ボーナス", "夏", "冬"],
+        category: "給与"
+    },
+    {
+        id: 2,
+        icon: "🚃",
+        name: "通勤費・交通費支給",
+        description: "通勤に必要な交通費を全額支給します。",
+        amount: "全額支給",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["通勤", "交通費", "定期券", "電車"],
+        category: "日常"
+    },
+    {
+        id: 3,
+        icon: "💻",
+        name: "在宅勤務手当",
+        description: "在宅勤務に必要な環境整備費用（光熱費、通信費等）を補助します。",
+        amount: "手当支給",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["在宅", "リモート", "テレワーク", "自宅"],
+        category: "日常"
+    },
+    {
+        id: 4,
+        icon: "🏠",
+        name: "住宅補助",
+        description: "住宅にかかる費用を補助します。",
+        amount: "補助金支給",
         conditions: {
             minYears: 0,
             marital: null,
@@ -35,11 +57,81 @@ const benefitsDatabase = [
         category: "住宅"
     },
     {
-        id: 2,
+        id: 5,
+        icon: "🏢",
+        name: "常駐手当",
+        description: "顧客先に常駐する社員に支給される手当です。",
+        amount: "手当支給",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["常駐", "客先", "派遣", "プロジェクト"],
+        category: "業務"
+    },
+    {
+        id: 6,
+        icon: "✈️",
+        name: "リフレッシュ休暇手当",
+        description: "勤続10年経過後、5年ごとに年次有給休暇とは別に5日間のリフレッシュ休暇が付与され、休暇取得時には手当が支給されます。",
+        amount: "5日間 + 手当支給",
+        conditions: {
+            minYears: 10,
+            marital: null,
+            children: null
+        },
+        keywords: ["休暇", "旅行", "リフレッシュ", "バケーション"],
+        category: "休暇"
+    },
+    {
+        id: 7,
+        icon: "💼",
+        name: "ライフデザイン手当（退職金制度）",
+        description: "確定拠出年金とライフデザイン給（前払退職金）の組み合わせで構成され、社員のライフプランに合わせた運用が可能です。",
+        amount: "確定拠出年金 + 前払退職金",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["退職金", "年金", "将来", "老後", "ライフプラン"],
+        category: "将来設計"
+    },
+    {
+        id: 8,
+        icon: "🤝",
+        name: "採用貢献手当",
+        description: "社員が紹介したキャリア採用者が一定期間在籍した場合、紹介者に手当が支給されます。",
+        amount: "手当支給",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["採用", "紹介", "リファラル"],
+        category: "その他"
+    },
+    {
+        id: 9,
+        icon: "💵",
+        name: "財形貯蓄",
+        description: "給与天引きによる積立貯蓄制度で、一般・年金・住宅の3種類があります。",
+        amount: "給与天引き貯蓄",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["貯蓄", "貯金", "財形", "積立"],
+        category: "将来設計"
+    },
+    {
+        id: 10,
         icon: "💍",
-        name: "結婚祝い金",
+        name: "慶弔見舞金（結婚祝い金）",
         description: "結婚された社員の方に祝い金を支給します。新生活のスタートを応援します。",
-        amount: "50,000円",
+        amount: "祝い金支給",
         conditions: {
             minYears: 0,
             marital: "married",
@@ -49,11 +141,11 @@ const benefitsDatabase = [
         category: "ライフイベント"
     },
     {
-        id: 3,
+        id: 11,
         icon: "👶",
-        name: "出産祝い金",
+        name: "慶弔見舞金（出産祝い金）",
         description: "お子様が誕生された際に祝い金を支給します。",
-        amount: "第1子: 100,000円<br>第2子: 150,000円<br>第3子以降: 200,000円",
+        amount: "祝い金支給",
         conditions: {
             minYears: 0,
             marital: null,
@@ -63,25 +155,67 @@ const benefitsDatabase = [
         category: "ライフイベント"
     },
     {
-        id: 4,
-        icon: "🏫",
-        name: "育児支援手当",
-        description: "未就学児をお持ちの社員に月額手当を支給します。",
-        amount: "10,000円/月/子",
+        id: 12,
+        icon: "🕊️",
+        name: "慶弔見舞金（弔慰金・見舞金）",
+        description: "家族の不幸時の弔慰金、災害時の見舞金などが支給されます。",
+        amount: "見舞金支給",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["弔慰", "見舞", "災害", "不幸"],
+        category: "ライフイベント"
+    },
+    {
+        id: 13,
+        icon: "🛡️",
+        name: "総合福祉団体定期保険",
+        description: "会社が全額保険料を負担し、社員が死亡または高度障害となった場合に保険金が支給されます。",
+        amount: "会社全額負担",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["保険", "死亡", "障害", "補償"],
+        category: "保険"
+    },
+    {
+        id: 14,
+        icon: "🎓",
+        name: "遺児育英資金",
+        description: "社員が死亡または高度障害により退職した場合、その遺児や子女の育英のための一時金が支給されます。",
+        amount: "一時金支給",
         conditions: {
             minYears: 0,
             marital: null,
             children: "yes"
         },
-        keywords: ["育児", "子育て", "保育園", "幼稚園", "子供"],
-        category: "育児"
+        keywords: ["育英", "教育", "遺児", "子供"],
+        category: "保険"
     },
     {
-        id: 5,
+        id: 15,
+        icon: "📋",
+        name: "団体扱い生命保険・損害保険",
+        description: "団体割引により、個人契約よりも安価に加入でき、年末調整の手間も省けます。",
+        amount: "団体割引",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["保険", "生命保険", "損害保険", "団体"],
+        category: "保険"
+    },
+    {
+        id: 16,
         icon: "🏥",
-        name: "健康診断補助",
-        description: "年1回の定期健康診断を全額会社負担で実施します。人間ドックも選択可能です。",
-        amount: "全額補助",
+        name: "健康診断",
+        description: "全社員が会社負担で健康診断を受診できます。希望者は有償オプション検査も受けられます。",
+        amount: "全額会社負担",
         conditions: {
             minYears: 0,
             marital: null,
@@ -91,144 +225,116 @@ const benefitsDatabase = [
         category: "健康"
     },
     {
-        id: 6,
-        icon: "🏋️",
-        name: "スポーツクラブ利用補助",
-        description: "提携スポーツクラブの利用料を補助します。健康維持にお役立てください。",
-        amount: "利用料の50%補助",
+        id: 17,
+        icon: "💚",
+        name: "こころとからだの健康相談",
+        description: "心身の健康、介護、育児に関する無料相談窓口が設けられており、必要に応じて医師との直接通話やカウンセリングも可能です。",
+        amount: "無料相談サービス",
         conditions: {
             minYears: 0,
             marital: null,
             children: null
         },
-        keywords: ["スポーツ", "ジム", "フィットネス", "運動", "健康"],
+        keywords: ["相談", "カウンセリング", "メンタル", "健康", "心"],
         category: "健康"
     },
     {
-        id: 7,
-        icon: "📚",
-        name: "資格取得支援制度",
-        description: "業務に関連する資格の取得費用を全額補助します。",
-        amount: "全額補助 + 合格祝い金",
-        conditions: {
-            minYears: 1,
-            marital: null,
-            children: null
-        },
-        keywords: ["資格", "勉強", "試験", "スキルアップ", "学習"],
-        category: "キャリア"
-    },
-    {
-        id: 8,
-        icon: "✈️",
-        name: "リフレッシュ休暇",
-        description: "勤続5年ごとに特別休暇5日間と旅行補助金を支給します。",
-        amount: "5日間 + 100,000円",
-        conditions: {
-            minYears: 5,
-            marital: null,
-            children: null
-        },
-        keywords: ["休暇", "旅行", "リフレッシュ", "バケーション"],
-        category: "休暇"
-    },
-    {
-        id: 9,
-        icon: "🍱",
-        name: "食事補助",
-        description: "社員食堂やランチ代の一部を補助します。",
-        amount: "5,000円/月",
+        id: 18,
+        icon: "👶",
+        name: "育児休業制度",
+        description: "育児のための休業制度です。育児短時間勤務、子の看護休暇も利用可能です。",
+        amount: "育児休業取得可能",
         conditions: {
             minYears: 0,
-            marital: null,
-            children: null
-        },
-        keywords: ["食事", "ランチ", "昼食", "社食"],
-        category: "日常"
-    },
-    {
-        id: 10,
-        icon: "🚃",
-        name: "通勤交通費",
-        description: "通勤に必要な交通費を全額支給します。",
-        amount: "全額支給",
-        conditions: {
-            minYears: 0,
-            marital: null,
-            children: null
-        },
-        keywords: ["通勤", "交通費", "定期券"],
-        category: "日常"
-    },
-    {
-        id: 11,
-        icon: "🎓",
-        name: "子女教育手当",
-        description: "お子様の教育費を支援します（小学校〜大学）。",
-        amount: "10,000〜30,000円/月",
-        conditions: {
-            minYears: 1,
             marital: null,
             children: "yes"
         },
-        keywords: ["教育", "学校", "大学", "学費", "子供"],
+        keywords: ["育児", "休業", "子育て", "保育園", "子供", "短時間"],
         category: "育児"
     },
     {
-        id: 12,
-        icon: "🏠",
-        name: "持家支援制度",
-        description: "住宅購入時の頭金や住宅ローンの利子補給を行います。",
-        amount: "最大100万円補助",
-        conditions: {
-            minYears: 3,
-            marital: null,
-            children: null
-        },
-        keywords: ["住宅", "マイホーム", "持家", "家", "購入", "ローン"],
-        category: "住宅"
-    },
-    {
-        id: 13,
-        icon: "🎉",
-        name: "永年勤続表彰",
-        description: "勤続10年、20年、30年の節目に表彰と記念品を贈呈します。",
-        amount: "記念品 + 特別休暇",
-        conditions: {
-            minYears: 10,
-            marital: null,
-            children: null
-        },
-        keywords: ["勤続", "表彰", "記念"],
-        category: "その他"
-    },
-    {
-        id: 14,
+        id: 19,
         icon: "👨‍👩‍👧",
-        name: "介護支援制度",
-        description: "ご家族の介護が必要な場合の休暇や補助金制度です。",
-        amount: "介護休暇 + 相談サービス",
-        conditions: {
-            minYears: 1,
-            marital: null,
-            children: null
-        },
-        keywords: ["介護", "家族", "親"],
-        category: "ライフイベント"
-    },
-    {
-        id: 15,
-        icon: "💻",
-        name: "在宅勤務手当",
-        description: "在宅勤務に必要な環境整備費用を補助します。",
-        amount: "5,000円/月",
+        name: "介護休業制度",
+        description: "介護のための休業制度です。介護短時間勤務、介護休暇も利用可能です。",
+        amount: "介護休業取得可能",
         conditions: {
             minYears: 0,
             marital: null,
             children: null
         },
-        keywords: ["在宅", "リモート", "テレワーク"],
-        category: "日常"
+        keywords: ["介護", "家族", "親", "休業", "短時間"],
+        category: "ライフイベント"
+    },
+    {
+        id: 20,
+        icon: "🏖️",
+        name: "関東ITソフトウェア健康保険組合（ITS）",
+        description: "保養施設、スポーツ施設、ゴルフ場、オートキャンプ場、ラフォーレ倶楽部、レストラン、ITS旅行パック、健康増進イベント参加など、多彩なサービスを利用できます。",
+        amount: "各種施設利用可能",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["保養", "スポーツ", "ゴルフ", "旅行", "健康", "施設", "レジャー"],
+        category: "レジャー"
+    },
+    {
+        id: 21,
+        icon: "🛡️",
+        name: "総合保障保険・スーパー所得補償保険",
+        description: "三井物産グループ会社の社員を対象としたオリジナルの団体保険制度が用意されています。",
+        amount: "団体保険制度",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["保険", "所得", "補償", "三井物産"],
+        category: "保険"
+    },
+    {
+        id: 22,
+        icon: "🏛️",
+        name: "綱町三井倶楽部",
+        description: "三井グループの限られた企業のみが会員となる会員制倶楽部で、宴会、パーティー、ウェディングなどに利用できます。",
+        amount: "会員制倶楽部利用",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["倶楽部", "クラブ", "宴会", "パーティー", "ウェディング", "結婚式"],
+        category: "レジャー"
+    },
+    {
+        id: 23,
+        icon: "🍽️",
+        name: "新宿三井クラブ",
+        description: "新宿三井ビル54階の会員制レストランで、家族や友人と絶景を眺めながら食事を楽しめます。",
+        amount: "会員制レストラン利用",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["レストラン", "食事", "新宿", "クラブ", "景色"],
+        category: "レジャー"
+    },
+    {
+        id: 24,
+        icon: "🏥",
+        name: "健康保険・厚生年金保険",
+        description: "健康保険、厚生年金保険、雇用保険、労働災害補償保険、介護保険（対象者のみ）に加入しています。",
+        amount: "各種社会保険完備",
+        conditions: {
+            minYears: 0,
+            marital: null,
+            children: null
+        },
+        keywords: ["保険", "健康保険", "年金", "雇用保険", "労災"],
+        category: "保険"
     }
 ];
 
@@ -403,22 +509,23 @@ function generateBotResponse(message) {
     if (matchedBenefits.length === 0) {
         return `申し訳ございません。「${message}」に関連する福利厚生が見つかりませんでした。<br><br>
                 以下のようなキーワードでお試しください：<br>
-                • 結婚、出産、育児<br>
-                • 住宅、引っ越し<br>
-                • 健康診断、スポーツ<br>
-                • 資格、勉強<br>
-                • 休暇、旅行`;
+                • 「結婚」「出産」「育児」「介護」<br>
+                • 「住宅」「引っ越し」「家賃」<br>
+                • 「健康診断」「保険」「相談」<br>
+                • 「旅行」「保養」「レストラン」<br>
+                • 「休暇」「貯蓄」「年金」`;
     }
     
-    let response = `以下の福利厚生が利用できます：<br><br>`;
+    let response = `${matchedBenefits.length}件の福利厚生が見つかりました！<br><br>`;
     
     matchedBenefits.forEach(benefit => {
         response += `<strong>${benefit.icon} ${benefit.name}</strong><br>`;
         response += `${benefit.description}<br>`;
-        response += `<span style="color: #667eea; font-weight: bold;">💰 ${benefit.amount}</span><br><br>`;
+        response += `<span style="color: #667eea; font-weight: bold;">💰 ${benefit.amount}</span><br>`;
+        response += `<span style="background: #e8ecff; color: #667eea; padding: 2px 8px; border-radius: 10px; font-size: 0.85em;">${benefit.category}</span><br><br>`;
     });
     
-    response += `詳細については人事部までお問い合わせください。`;
+    response += `<br>詳細や申請方法については人事部までお問い合わせください。<br>他にもお探しのものがあればお気軽にお聞きください！`;
     
     return response;
 }
@@ -610,23 +717,7 @@ function clearData() {
 
 // 初期化処理
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('MKI 福利厚生ナビゲーターが起動しました');
+    console.log('MKI 福利厚生ナビゲーターが起動しました（実際のMKI制度に基づく）');
     console.log(`登録されている福利厚生: ${benefitsDatabase.length}件`);
-    
-    // 検索履歴を読み込み
-    loadAnalytics();
-    updateAnalyticsDisplay();
-    
-    // 分析タブのボタンイベント
-    const exportBtn = document.getElementById('export-data');
-    const clearBtn = document.getElementById('clear-data');
-    
-    if (exportBtn) {
-        exportBtn.addEventListener('click', exportData);
-    }
-    
-    if (clearBtn) {
-        clearBtn.addEventListener('click', clearData);
-    }
 });
 
