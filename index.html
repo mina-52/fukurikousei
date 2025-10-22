@@ -18,6 +18,7 @@
             <div class="tab-navigation">
                 <button class="tab-btn active" data-tab="profile">基本情報から探す</button>
                 <button class="tab-btn" data-tab="chat">会話で探す</button>
+                <button class="tab-btn" data-tab="analytics">検索分析</button>
             </div>
 
             <!-- 基本情報タブ -->
@@ -99,6 +100,58 @@
                     <div class="chat-input-container">
                         <input type="text" id="chat-input" placeholder="メッセージを入力..." />
                         <button id="chat-send" class="btn-send">送信</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 検索分析タブ -->
+            <div class="tab-content" id="analytics-tab">
+                <div class="card">
+                    <h2>📊 社員の福利厚生検索分析</h2>
+                    <p class="analytics-description">チャット機能で検索された福利厚生のデータを集計・分析します。</p>
+                    
+                    <div class="analytics-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">💬</div>
+                            <div class="stat-value" id="total-searches">0</div>
+                            <div class="stat-label">総検索回数</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🔍</div>
+                            <div class="stat-value" id="unique-benefits">0</div>
+                            <div class="stat-label">検索された福利厚生</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-value" id="last-search">未検索</div>
+                            <div class="stat-label">最終検索日時</div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-section">
+                        <h3>🏆 人気の福利厚生ランキング TOP10</h3>
+                        <div id="benefits-ranking" class="ranking-list">
+                            <p class="no-data">まだデータがありません。チャット機能で検索を行うとここに表示されます。</p>
+                        </div>
+                    </div>
+
+                    <div class="analytics-section">
+                        <h3>🔤 検索キーワード履歴</h3>
+                        <div id="keyword-history" class="keyword-list">
+                            <p class="no-data">まだデータがありません。</p>
+                        </div>
+                    </div>
+
+                    <div class="analytics-section">
+                        <h3>📈 カテゴリ別検索状況</h3>
+                        <div id="category-chart" class="category-chart">
+                            <p class="no-data">まだデータがありません。</p>
+                        </div>
+                    </div>
+
+                    <div class="analytics-actions">
+                        <button id="export-data" class="btn-secondary">📥 データをエクスポート</button>
+                        <button id="clear-data" class="btn-danger">🗑️ データをクリア</button>
                     </div>
                 </div>
             </div>

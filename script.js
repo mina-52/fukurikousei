@@ -1,3 +1,23 @@
+// 検索履歴データ（LocalStorageに保存）
+let searchAnalytics = {
+    searches: [], // { keyword, timestamp, benefits: [] }
+    benefitCounts: {}, // benefitId: count
+    categoryCounts: {} // category: count
+};
+
+// LocalStorageから検索履歴を読み込む
+function loadAnalytics() {
+    const saved = localStorage.getItem('mki_search_analytics');
+    if (saved) {
+        searchAnalytics = JSON.parse(saved);
+    }
+}
+
+// LocalStorageに検索履歴を保存
+function saveAnalytics() {
+    localStorage.setItem('mki_search_analytics', JSON.stringify(searchAnalytics));
+}
+
 // 福利厚生データベース
 const benefitsDatabase = [
     {
@@ -375,6 +395,11 @@ function generateBotResponse(message) {
         return benefit.keywords.some(keyword => lowerMessage.includes(keyword));
     });
     
+    // 検索履歴を記録
+    if (matchedBenefits.length > 0) {
+        recordSearch(message, matchedBenefits);
+    }
+    
     if (matchedBenefits.length === 0) {
         return `申し訳ございません。「${message}」に関連する福利厚生が見つかりませんでした。<br><br>
                 以下のようなキーワードでお試しください：<br>
@@ -398,9 +423,210 @@ function generateBotResponse(message) {
     return response;
 }
 
+// 検索履歴を記録
+function recordSearch(keyword, benefits) {
+    const timestamp = new Date().toISOString();
+    
+    // 検索履歴に追加
+    searchAnalytics.searches.push({
+        keyword: keyword,
+        timestamp: timestamp,
+        benefits: benefits.map(b => b.id)
+    });
+    
+    // 福利厚生のカウントを更新
+    benefits.forEach(benefit => {
+        if (!searchAnalytics.benefitCounts[benefit.id]) {
+            searchAnalytics.benefitCounts[benefit.id] = 0;
+        }
+        searchAnalytics.benefitCounts[benefit.id]++;
+        
+        // カテゴリのカウントを更新
+        if (!searchAnalytics.categoryCounts[benefit.category]) {
+            searchAnalytics.categoryCounts[benefit.category] = 0;
+        }
+        searchAnalytics.categoryCounts[benefit.category]++;
+    });
+    
+    // LocalStorageに保存
+    saveAnalytics();
+    
+    // 分析画面を更新
+    updateAnalyticsDisplay();
+}
+
+// 分析画面を更新
+function updateAnalyticsDisplay() {
+    // 統計情報を更新
+    const totalSearches = searchAnalytics.searches.length;
+    const uniqueBenefits = Object.keys(searchAnalytics.benefitCounts).length;
+    const lastSearch = searchAnalytics.searches.length > 0 
+        ? formatDateTime(searchAnalytics.searches[searchAnalytics.searches.length - 1].timestamp)
+        : '未検索';
+    
+    document.getElementById('total-searches').textContent = totalSearches;
+    document.getElementById('unique-benefits').textContent = uniqueBenefits;
+    document.getElementById('last-search').textContent = lastSearch;
+    
+    // ランキングを更新
+    updateBenefitsRanking();
+    
+    // キーワード履歴を更新
+    updateKeywordHistory();
+    
+    // カテゴリチャートを更新
+    updateCategoryChart();
+}
+
+// 日時をフォーマット
+function formatDateTime(isoString) {
+    const date = new Date(isoString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${month}/${day} ${hours}:${minutes}`;
+}
+
+// 福利厚生ランキングを更新
+function updateBenefitsRanking() {
+    const rankingContainer = document.getElementById('benefits-ranking');
+    
+    if (Object.keys(searchAnalytics.benefitCounts).length === 0) {
+        rankingContainer.innerHTML = '<p class="no-data">まだデータがありません。チャット機能で検索を行うとここに表示されます。</p>';
+        return;
+    }
+    
+    // カウントでソート
+    const sorted = Object.entries(searchAnalytics.benefitCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+    
+    rankingContainer.innerHTML = '';
+    sorted.forEach(([benefitId, count], index) => {
+        const benefit = benefitsDatabase.find(b => b.id === parseInt(benefitId));
+        if (!benefit) return;
+        
+        const rankClass = index === 0 ? 'top1' : index === 1 ? 'top2' : index === 2 ? 'top3' : '';
+        
+        const item = document.createElement('div');
+        item.className = 'ranking-item';
+        item.innerHTML = `
+            <div class="ranking-number ${rankClass}">${index + 1}</div>
+            <div class="ranking-icon">${benefit.icon}</div>
+            <div class="ranking-info">
+                <div class="ranking-name">${benefit.name}</div>
+                <span class="ranking-category">${benefit.category}</span>
+            </div>
+            <div class="ranking-count">${count}回</div>
+        `;
+        rankingContainer.appendChild(item);
+    });
+}
+
+// キーワード履歴を更新
+function updateKeywordHistory() {
+    const historyContainer = document.getElementById('keyword-history');
+    
+    if (searchAnalytics.searches.length === 0) {
+        historyContainer.innerHTML = '<p class="no-data">まだデータがありません。</p>';
+        return;
+    }
+    
+    // 最新10件を表示
+    const recentSearches = searchAnalytics.searches.slice(-10).reverse();
+    
+    historyContainer.innerHTML = '';
+    recentSearches.forEach(search => {
+        const tag = document.createElement('div');
+        tag.className = 'keyword-tag';
+        tag.innerHTML = `
+            <span>${search.keyword}</span>
+            <span class="keyword-time">${formatDateTime(search.timestamp)}</span>
+        `;
+        historyContainer.appendChild(tag);
+    });
+}
+
+// カテゴリチャートを更新
+function updateCategoryChart() {
+    const chartContainer = document.getElementById('category-chart');
+    
+    if (Object.keys(searchAnalytics.categoryCounts).length === 0) {
+        chartContainer.innerHTML = '<p class="no-data">まだデータがありません。</p>';
+        return;
+    }
+    
+    // カテゴリの最大値を取得
+    const maxCount = Math.max(...Object.values(searchAnalytics.categoryCounts));
+    
+    chartContainer.innerHTML = '';
+    Object.entries(searchAnalytics.categoryCounts)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([category, count]) => {
+            const percentage = (count / maxCount) * 100;
+            
+            const bar = document.createElement('div');
+            bar.className = 'category-bar';
+            bar.innerHTML = `
+                <div class="category-label">${category}</div>
+                <div class="category-bar-container">
+                    <div class="category-bar-fill" style="width: ${percentage}%">
+                        ${count}回
+                    </div>
+                </div>
+            `;
+            chartContainer.appendChild(bar);
+        });
+}
+
+// データをエクスポート
+function exportData() {
+    const dataStr = JSON.stringify(searchAnalytics, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `mki_welfare_analytics_${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    
+    alert('データをエクスポートしました！');
+}
+
+// データをクリア
+function clearData() {
+    if (confirm('本当にすべての検索データを削除しますか？この操作は取り消せません。')) {
+        searchAnalytics = {
+            searches: [],
+            benefitCounts: {},
+            categoryCounts: {}
+        };
+        saveAnalytics();
+        updateAnalyticsDisplay();
+        alert('データをクリアしました。');
+    }
+}
+
 // 初期化処理
 document.addEventListener('DOMContentLoaded', () => {
     console.log('MKI 福利厚生ナビゲーターが起動しました');
     console.log(`登録されている福利厚生: ${benefitsDatabase.length}件`);
+    
+    // 検索履歴を読み込み
+    loadAnalytics();
+    updateAnalyticsDisplay();
+    
+    // 分析タブのボタンイベント
+    const exportBtn = document.getElementById('export-data');
+    const clearBtn = document.getElementById('clear-data');
+    
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportData);
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearData);
+    }
 });
 
