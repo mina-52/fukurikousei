@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MKI 福利厚生ナビゲーター</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏢 MKI 福利厚生ナビゲーター</h1>
+            <p class="subtitle">あなたに合った福利厚生を簡単に見つけましょう</p>
+        </header>
+
+        <div class="main-content">
+            <!-- タブナビゲーション -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="profile">基本情報から探す</button>
+                <button class="tab-btn" data-tab="chat">会話で探す</button>
+            </div>
+
+            <!-- 基本情報タブ -->
+            <div class="tab-content active" id="profile-tab">
+                <div class="card">
+                    <h2>社員情報を入力してください</h2>
+                    <form id="employee-form">
+                        <div class="form-group">
+                            <label for="name">お名前</label>
+                            <input type="text" id="name" name="name" placeholder="山田 太郎" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">住所</label>
+                            <input type="text" id="address" name="address" placeholder="東京都千代田区" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="age">年齢</label>
+                            <input type="number" id="age" name="age" placeholder="30" min="18" max="70" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="years">勤続年数</label>
+                            <input type="number" id="years" name="years" placeholder="5" min="0" max="50" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>結婚状況</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="marital" value="single" checked> 独身</label>
+                                <label><input type="radio" name="marital" value="married"> 既婚</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>お子様</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="children" value="no" checked> いない</label>
+                                <label><input type="radio" name="children" value="yes"> いる</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="children-count-group" style="display: none;">
+                            <label for="children-count">お子様の人数</label>
+                            <input type="number" id="children-count" name="children-count" placeholder="2" min="1" max="10">
+                        </div>
+
+                        <button type="submit" class="btn-primary">利用可能な福利厚生を表示</button>
+                    </form>
+                </div>
+
+                <div class="results-section" id="profile-results" style="display: none;">
+                    <h2>あなたが利用できる福利厚生</h2>
+                    <div class="employee-info" id="employee-info"></div>
+                    <div class="benefits-grid" id="benefits-list"></div>
+                </div>
+            </div>
+
+            <!-- 会話タブ -->
+            <div class="tab-content" id="chat-tab">
+                <div class="card chat-container">
+                    <h2>チャットで相談</h2>
+                    <p class="chat-description">「結婚しました」「子供が生まれました」「引っ越しします」などと入力してください</p>
+                    
+                    <div class="chat-box" id="chat-box">
+                        <div class="chat-message bot">
+                            <div class="message-content">
+                                こんにちは！福利厚生についてお手伝いします。<br>
+                                何かライフイベントがありましたか？例えば：<br>
+                                • 「結婚しました」<br>
+                                • 「子供が生まれました」<br>
+                                • 「引っ越しします」<br>
+                                • 「健康診断を受けたい」
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-input" placeholder="メッセージを入力..." />
+                        <button id="chat-send" class="btn-send">送信</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
