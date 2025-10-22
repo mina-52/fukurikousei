@@ -541,8 +541,8 @@ function generateBotResponse(message) {
     matchedBenefits.forEach(benefit => {
         response += `<strong>${benefit.icon} ${benefit.name}</strong><br>`;
         response += `${benefit.description}<br>`;
-        response += `<span style="color: #667eea; font-weight: bold;">💰 ${benefit.amount}</span><br>`;
-        response += `<span style="background: #e8ecff; color: #667eea; padding: 2px 8px; border-radius: 10px; font-size: 0.85em;">${benefit.category}</span><br><br>`;
+        response += `<span style="color: #006B54; font-weight: bold;">💰 ${benefit.amount}</span><br>`;
+        response += `<span style="background: #d4ede7; color: #004D40; padding: 2px 8px; border-radius: 10px; font-size: 0.85em;">${benefit.category}</span><br><br>`;
     });
     
     response += `<br>詳細や申請方法については人事部までお問い合わせください。<br>他にもお探しのものがあればお気軽にお聞きください！`;
