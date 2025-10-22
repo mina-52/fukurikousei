@@ -1,3 +1,23 @@
+// 検索履歴データ（LocalStorageに保存）
+let searchAnalytics = {
+    searches: [], // { keyword, timestamp, benefits: [] }
+    benefitCounts: {}, // benefitId: count
+    categoryCounts: {} // category: count
+};
+
+// LocalStorageから検索履歴を読み込む
+function loadAnalytics() {
+    const saved = localStorage.getItem('mki_search_analytics');
+    if (saved) {
+        searchAnalytics = JSON.parse(saved);
+    }
+}
+
+// LocalStorageに検索履歴を保存
+function saveAnalytics() {
+    localStorage.setItem('mki_search_analytics', JSON.stringify(searchAnalytics));
+}
+
 // 福利厚生データベース
 const benefitsDatabase = [
     {
@@ -564,6 +584,10 @@ function recordSearch(keyword, benefits) {
 
 // 分析画面を更新
 function updateAnalyticsDisplay() {
+    // 要素が存在しない場合は何もしない（分析タブが表示されていない場合）
+    const totalSearchesEl = document.getElementById('total-searches');
+    if (!totalSearchesEl) return;
+    
     // 統計情報を更新
     const totalSearches = searchAnalytics.searches.length;
     const uniqueBenefits = Object.keys(searchAnalytics.benefitCounts).length;
@@ -571,7 +595,7 @@ function updateAnalyticsDisplay() {
         ? formatDateTime(searchAnalytics.searches[searchAnalytics.searches.length - 1].timestamp)
         : '未検索';
     
-    document.getElementById('total-searches').textContent = totalSearches;
+    totalSearchesEl.textContent = totalSearches;
     document.getElementById('unique-benefits').textContent = uniqueBenefits;
     document.getElementById('last-search').textContent = lastSearch;
     
@@ -598,6 +622,7 @@ function formatDateTime(isoString) {
 // 福利厚生ランキングを更新
 function updateBenefitsRanking() {
     const rankingContainer = document.getElementById('benefits-ranking');
+    if (!rankingContainer) return;
     
     if (Object.keys(searchAnalytics.benefitCounts).length === 0) {
         rankingContainer.innerHTML = '<p class="no-data">まだデータがありません。チャット機能で検索を行うとここに表示されます。</p>';
@@ -634,6 +659,7 @@ function updateBenefitsRanking() {
 // キーワード履歴を更新
 function updateKeywordHistory() {
     const historyContainer = document.getElementById('keyword-history');
+    if (!historyContainer) return;
     
     if (searchAnalytics.searches.length === 0) {
         historyContainer.innerHTML = '<p class="no-data">まだデータがありません。</p>';
@@ -658,6 +684,7 @@ function updateKeywordHistory() {
 // カテゴリチャートを更新
 function updateCategoryChart() {
     const chartContainer = document.getElementById('category-chart');
+    if (!chartContainer) return;
     
     if (Object.keys(searchAnalytics.categoryCounts).length === 0) {
         chartContainer.innerHTML = '<p class="no-data">まだデータがありません。</p>';
@@ -719,5 +746,22 @@ function clearData() {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('MKI 福利厚生ナビゲーターが起動しました（実際のMKI制度に基づく）');
     console.log(`登録されている福利厚生: ${benefitsDatabase.length}件`);
+    console.log('カテゴリ: 給与、日常、住宅、業務、休暇、将来設計、ライフイベント、保険、健康、育児、レジャー');
+    
+    // 検索履歴を読み込み
+    loadAnalytics();
+    updateAnalyticsDisplay();
+    
+    // 分析タブのボタンイベント
+    const exportBtn = document.getElementById('export-data');
+    const clearBtn = document.getElementById('clear-data');
+    
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportData);
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearData);
+    }
 });
 
