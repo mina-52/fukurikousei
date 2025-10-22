@@ -32,7 +32,9 @@ const benefitsDatabase = [
             children: null
         },
         keywords: ["賞与", "ボーナス", "夏", "冬"],
-        category: "給与"
+        category: "給与",
+        requiresApplication: false,
+        applicationProcess: null
     },
     {
         id: 2,
@@ -102,7 +104,21 @@ const benefitsDatabase = [
             children: null
         },
         keywords: ["休暇", "旅行", "リフレッシュ", "バケーション"],
-        category: "休暇"
+        category: "休暇",
+        requiresApplication: true,
+        applicationProcess: {
+            steps: [
+                "人事システムにログイン",
+                "「休暇申請」メニューを選択",
+                "「リフレッシュ休暇」を選択",
+                "希望日程を入力（5日間連続または分割可能）",
+                "上長の承認を得る",
+                "承認後、旅行計画書を提出（任意）"
+            ],
+            deadline: "取得希望日の1ヶ月前まで",
+            department: "人事部",
+            notes: "年度内に取得してください。手当は休暇取得後に支給されます。"
+        }
     },
     {
         id: 7,
@@ -144,7 +160,22 @@ const benefitsDatabase = [
             children: null
         },
         keywords: ["貯蓄", "貯金", "財形", "積立"],
-        category: "将来設計"
+        category: "将来設計",
+        requiresApplication: true,
+        applicationProcess: {
+            steps: [
+                "人事システムにログイン",
+                "「福利厚生」→「財形貯蓄」を選択",
+                "貯蓄種類を選択（一般・年金・住宅）",
+                "月額積立額を設定",
+                "金融機関を選択",
+                "申込書をダウンロードして記入",
+                "人事部に提出"
+            ],
+            deadline: "毎月15日まで（翌月から適用）",
+            department: "人事部 福利厚生担当",
+            notes: "年金財形と住宅財形は非課税のメリットがあります。"
+        }
     },
     {
         id: 10,
@@ -270,7 +301,21 @@ const benefitsDatabase = [
             children: "yes"
         },
         keywords: ["育児", "休業", "子育て", "保育園", "子供", "短時間"],
-        category: "育児"
+        category: "育児",
+        requiresApplication: true,
+        applicationProcess: {
+            steps: [
+                "出産予定日の1ヶ月前までに上長に相談",
+                "人事システムから「育児休業申請書」をダウンロード",
+                "必要事項を記入（取得期間、復帰予定日など）",
+                "母子手帳のコピーを添付",
+                "上長の承認を得る",
+                "人事部に提出（出産予定日の1ヶ月前まで）"
+            ],
+            deadline: "出産予定日の1ヶ月前まで",
+            department: "人事部 労務担当",
+            notes: "育児休業は原則として子が1歳になるまで取得可能です。保育所に入所できない場合は最長2歳まで延長できます。"
+        }
     },
     {
         id: 19,
@@ -284,7 +329,21 @@ const benefitsDatabase = [
             children: null
         },
         keywords: ["介護", "家族", "親", "休業", "短時間"],
-        category: "ライフイベント"
+        category: "ライフイベント",
+        requiresApplication: true,
+        applicationProcess: {
+            steps: [
+                "介護が必要になった時点で上長に相談",
+                "人事システムから「介護休業申請書」をダウンロード",
+                "医師の診断書または介護認定証明書を準備",
+                "取得期間を記入（通算93日まで、3回まで分割可能）",
+                "上長の承認を得る",
+                "人事部に提出（休業開始希望日の2週間前まで）"
+            ],
+            deadline: "休業開始希望日の2週間前まで",
+            department: "人事部 労務担当",
+            notes: "介護休業は対象家族1人につき通算93日まで、3回まで分割して取得できます。"
+        }
     },
     {
         id: 20,
@@ -298,7 +357,21 @@ const benefitsDatabase = [
             children: null
         },
         keywords: ["保養", "スポーツ", "ゴルフ", "旅行", "健康", "施設", "レジャー"],
-        category: "レジャー"
+        category: "レジャー",
+        requiresApplication: true,
+        applicationProcess: {
+            steps: [
+                "ITS健保のウェブサイトにアクセス",
+                "社員IDでログイン",
+                "利用したい施設・サービスを選択",
+                "予約フォームに必要事項を入力",
+                "予約確認メールを受信",
+                "利用当日、社員証を持参"
+            ],
+            deadline: "施設により異なる（通常は利用日の1週間前まで）",
+            department: "ITS健保 または 人事部",
+            notes: "初回利用時はITS健保への登録が必要です。詳細は人事部にお問い合わせください。"
+        }
     },
     {
         id: 21,
@@ -326,7 +399,21 @@ const benefitsDatabase = [
             children: null
         },
         keywords: ["倶楽部", "クラブ", "宴会", "パーティー", "ウェディング", "結婚式"],
-        category: "レジャー"
+        category: "レジャー",
+        requiresApplication: true,
+        applicationProcess: {
+            steps: [
+                "利用希望日の3ヶ月前から予約可能",
+                "人事部に利用申込書を請求",
+                "利用目的・日時・人数を記入",
+                "上長の承認を得る（業務関連の場合）",
+                "人事部経由で予約を確定",
+                "利用日の1週間前までに最終人数を連絡"
+            ],
+            deadline: "利用希望日の1ヶ月前まで",
+            department: "人事部 総務担当",
+            notes: "結婚式・披露宴の場合は半年前からの予約をお勧めします。"
+        }
     },
     {
         id: 23,
@@ -340,7 +427,21 @@ const benefitsDatabase = [
             children: null
         },
         keywords: ["レストラン", "食事", "新宿", "クラブ", "景色"],
-        category: "レジャー"
+        category: "レジャー",
+        requiresApplication: true,
+        applicationProcess: {
+            steps: [
+                "利用希望日の1ヶ月前から予約可能",
+                "新宿三井クラブに直接電話予約",
+                "または人事部経由で予約",
+                "予約時に社員番号を伝える",
+                "利用当日、社員証を持参",
+                "会計時に社員割引を申請"
+            ],
+            deadline: "利用希望日の1週間前まで",
+            department: "新宿三井クラブ予約係 または 人事部",
+            notes: "個人利用・接待・慶事など幅広く利用できます。予約状況により希望日時に添えない場合があります。"
+        }
     },
     {
         id: 24,
@@ -472,12 +573,25 @@ function filterBenefits(userData) {
 function createBenefitCard(benefit) {
     const card = document.createElement('div');
     card.className = 'benefit-card';
+    
+    const buttonsHTML = benefit.requiresApplication ? `
+        <div class="benefit-actions">
+            <button class="btn-apply" onclick="openApplicationModal(${benefit.id})">📝 申し込む</button>
+            <button class="btn-details" onclick="showApplicationProcess(${benefit.id})">📋 手続き方法</button>
+        </div>
+    ` : `
+        <div class="benefit-actions">
+            <button class="btn-info" onclick="showBenefitInfo(${benefit.id})">ℹ️ 詳細情報</button>
+        </div>
+    `;
+    
     card.innerHTML = `
         <div class="benefit-icon">${benefit.icon}</div>
         <h3>${benefit.name}</h3>
         <p>${benefit.description}</p>
         <div class="benefit-amount">${benefit.amount}</div>
         <span class="benefit-tag">${benefit.category}</span>
+        ${buttonsHTML}
     `;
     return card;
 }
@@ -742,6 +856,317 @@ function clearData() {
     }
 }
 
+// モーダル操作関数
+let currentBenefitId = null;
+
+function openApplicationModal(benefitId) {
+    currentBenefitId = benefitId;
+    const benefit = benefitsDatabase.find(b => b.id === benefitId);
+    const modal = document.getElementById('application-modal');
+    const modalTitle = document.getElementById('modal-title');
+    
+    modalTitle.textContent = `${benefit.icon} ${benefit.name} - 申し込み`;
+    modal.classList.add('show');
+    
+    // フォームをリセット
+    document.getElementById('application-form').reset();
+}
+
+function closeApplicationModal() {
+    const modal = document.getElementById('application-modal');
+    modal.classList.remove('show');
+    currentBenefitId = null;
+}
+
+function showApplicationProcess(benefitId) {
+    const benefit = benefitsDatabase.find(b => b.id === benefitId);
+    const modal = document.getElementById('process-modal');
+    const modalTitle = document.getElementById('process-title');
+    const processContent = document.getElementById('process-content');
+    
+    modalTitle.textContent = `${benefit.icon} ${benefit.name} - 手続き方法`;
+    
+    if (benefit.applicationProcess) {
+        let html = '<div class="process-steps">';
+        
+        benefit.applicationProcess.steps.forEach((step, index) => {
+            html += `
+                <div class="process-step">
+                    <div class="step-number">${index + 1}</div>
+                    <div class="step-text">${step}</div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        
+        html += `
+            <div class="process-info">
+                <h4>📅 申請期限</h4>
+                <p>${benefit.applicationProcess.deadline}</p>
+            </div>
+            <div class="process-info">
+                <h4>📞 お問い合わせ先</h4>
+                <p>${benefit.applicationProcess.department}</p>
+            </div>
+        `;
+        
+        if (benefit.applicationProcess.notes) {
+            html += `
+                <div class="process-info">
+                    <h4>💡 注意事項</h4>
+                    <p>${benefit.applicationProcess.notes}</p>
+                </div>
+            `;
+        }
+        
+        processContent.innerHTML = html;
+    } else {
+        processContent.innerHTML = `
+            <div class="process-info">
+                <p>この福利厚生は申し込み不要です。詳細については人事部にお問い合わせください。</p>
+            </div>
+        `;
+    }
+    
+    modal.classList.add('show');
+}
+
+function closeProcessModal() {
+    const modal = document.getElementById('process-modal');
+    modal.classList.remove('show');
+}
+
+function showBenefitInfo(benefitId) {
+    const benefit = benefitsDatabase.find(b => b.id === benefitId);
+    const modal = document.getElementById('process-modal');
+    const modalTitle = document.getElementById('process-title');
+    const processContent = document.getElementById('process-content');
+    
+    modalTitle.textContent = `${benefit.icon} ${benefit.name} - 詳細情報`;
+    
+    processContent.innerHTML = `
+        <div class="process-info">
+            <h4>📋 説明</h4>
+            <p>${benefit.description}</p>
+        </div>
+        <div class="process-info">
+            <h4>💰 支給額・内容</h4>
+            <p>${benefit.amount}</p>
+        </div>
+        <div class="process-info">
+            <h4>🏷️ カテゴリ</h4>
+            <p>${benefit.category}</p>
+        </div>
+        <div class="process-info">
+            <h4>📞 お問い合わせ</h4>
+            <p>詳細については人事部までお問い合わせください。</p>
+        </div>
+    `;
+    
+    modal.classList.add('show');
+}
+
+// モーダル外クリックで閉じる
+window.onclick = function(event) {
+    const appModal = document.getElementById('application-modal');
+    const procModal = document.getElementById('process-modal');
+    
+    if (event.target === appModal) {
+        closeApplicationModal();
+    }
+    if (event.target === procModal) {
+        closeProcessModal();
+    }
+}
+
+// 申し込みフォーム送信
+document.addEventListener('DOMContentLoaded', () => {
+    const applicationForm = document.getElementById('application-form');
+    
+    if (applicationForm) {
+        applicationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const benefit = benefitsDatabase.find(b => b.id === currentBenefitId);
+            const formData = {
+                benefitName: benefit.name,
+                name: document.getElementById('applicant-name').value,
+                department: document.getElementById('applicant-dept').value,
+                email: document.getElementById('applicant-email').value,
+                phone: document.getElementById('applicant-phone').value,
+                notes: document.getElementById('application-notes').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log('申し込みデータ:', formData);
+            
+            alert(`${benefit.name}の申し込みを受け付けました！\n\n人事部より追って連絡いたします。\n申し込み内容がメールで送信されます。`);
+            
+            closeApplicationModal();
+        });
+    }
+});
+
+// ドキュメントマップ機能
+function initDocumentMap() {
+    renderDocumentMap();
+    
+    // 検索機能
+    const searchInput = document.getElementById('doc-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', filterDocumentMap);
+    }
+    
+    // カテゴリフィルター
+    const categoryFilter = document.getElementById('category-filter');
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', filterDocumentMap);
+    }
+    
+    // 申し込みフィルター
+    const applicationFilter = document.getElementById('application-filter');
+    if (applicationFilter) {
+        applicationFilter.addEventListener('change', filterDocumentMap);
+    }
+}
+
+function renderDocumentMap(filteredBenefits = null) {
+    const documentMap = document.getElementById('document-map');
+    if (!documentMap) return;
+    
+    const benefits = filteredBenefits || benefitsDatabase;
+    
+    if (benefits.length === 0) {
+        documentMap.innerHTML = `
+            <div class="no-results">
+                <div class="no-results-icon">🔍</div>
+                <div class="no-results-text">該当する福利厚生が見つかりませんでした</div>
+                <div class="no-results-hint">検索条件を変更してお試しください</div>
+            </div>
+        `;
+        return;
+    }
+    
+    // カテゴリ別にグループ化
+    const categorized = {};
+    benefits.forEach(benefit => {
+        if (!categorized[benefit.category]) {
+            categorized[benefit.category] = [];
+        }
+        categorized[benefit.category].push(benefit);
+    });
+    
+    let html = '';
+    Object.keys(categorized).sort().forEach(category => {
+        const categoryBenefits = categorized[category];
+        html += `
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('${category}')">
+                    <div class="category-title">
+                        <h3>${category}</h3>
+                        <span class="category-count">${categoryBenefits.length}件</span>
+                    </div>
+                    <span class="category-toggle" id="toggle-${category}">▼</span>
+                </div>
+                <div class="benefits-table" id="benefits-${category}">
+                    ${categoryBenefits.map(benefit => createBenefitRow(benefit)).join('')}
+                </div>
+            </div>
+        `;
+    });
+    
+    documentMap.innerHTML = html;
+}
+
+function createBenefitRow(benefit) {
+    const actionButtons = benefit.requiresApplication ? `
+        <button class="btn-quick btn-quick-apply" onclick="openApplicationModal(${benefit.id})">申し込む</button>
+        <button class="btn-quick btn-quick-info" onclick="showApplicationProcess(${benefit.id})">手続き</button>
+    ` : `
+        <button class="btn-quick btn-quick-info" onclick="showBenefitInfo(${benefit.id})">詳細</button>
+    `;
+    
+    return `
+        <div class="benefit-row" data-benefit-id="${benefit.id}">
+            <div class="benefit-row-icon">${benefit.icon}</div>
+            <div class="benefit-row-info">
+                <div class="benefit-row-name">${benefit.name}</div>
+                <div class="benefit-row-desc">${benefit.description}</div>
+            </div>
+            <div class="benefit-row-amount">${benefit.amount}</div>
+            <div class="benefit-row-actions">
+                ${actionButtons}
+            </div>
+        </div>
+    `;
+}
+
+function toggleCategory(category) {
+    const benefitsTable = document.getElementById(`benefits-${category}`);
+    const toggle = document.getElementById(`toggle-${category}`);
+    
+    if (benefitsTable.style.display === 'none') {
+        benefitsTable.style.display = 'grid';
+        toggle.classList.remove('collapsed');
+    } else {
+        benefitsTable.style.display = 'none';
+        toggle.classList.add('collapsed');
+    }
+}
+
+function filterDocumentMap() {
+    const searchInput = document.getElementById('doc-search');
+    const categoryFilter = document.getElementById('category-filter');
+    const applicationFilter = document.getElementById('application-filter');
+    
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    const selectedCategory = categoryFilter ? categoryFilter.value : 'all';
+    const selectedApplication = applicationFilter ? applicationFilter.value : 'all';
+    
+    let filtered = benefitsDatabase.filter(benefit => {
+        // 検索フィルター
+        const matchesSearch = !searchTerm || 
+            benefit.name.toLowerCase().includes(searchTerm) ||
+            benefit.description.toLowerCase().includes(searchTerm) ||
+            benefit.category.toLowerCase().includes(searchTerm) ||
+            benefit.keywords.some(kw => kw.toLowerCase().includes(searchTerm));
+        
+        // カテゴリフィルター
+        const matchesCategory = selectedCategory === 'all' || benefit.category === selectedCategory;
+        
+        // 申し込みフィルター
+        let matchesApplication = true;
+        if (selectedApplication === 'required') {
+            matchesApplication = benefit.requiresApplication === true;
+        } else if (selectedApplication === 'not-required') {
+            matchesApplication = benefit.requiresApplication === false;
+        }
+        
+        return matchesSearch && matchesCategory && matchesApplication;
+    });
+    
+    // 統計を更新
+    updateDocumentStats(filtered);
+    
+    // マップを再描画
+    renderDocumentMap(filtered);
+}
+
+function updateDocumentStats(filteredBenefits) {
+    const total = benefitsDatabase.length;
+    const filtered = filteredBenefits.length;
+    const applicationRequired = benefitsDatabase.filter(b => b.requiresApplication === true).length;
+    
+    const totalEl = document.getElementById('total-benefits');
+    const filteredEl = document.getElementById('filtered-benefits');
+    const requiredEl = document.getElementById('application-required');
+    
+    if (totalEl) totalEl.textContent = total;
+    if (filteredEl) filteredEl.textContent = filtered;
+    if (requiredEl) requiredEl.textContent = applicationRequired;
+}
+
 // 初期化処理
 document.addEventListener('DOMContentLoaded', () => {
     console.log('MKI 福利厚生ナビゲーターが起動しました（実際のMKI制度に基づく）');
@@ -763,5 +1188,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearBtn) {
         clearBtn.addEventListener('click', clearData);
     }
+    
+    // 福利厚生データにデフォルト値を追加
+    benefitsDatabase.forEach(benefit => {
+        if (benefit.requiresApplication === undefined) {
+            benefit.requiresApplication = false;
+        }
+        if (benefit.applicationProcess === undefined) {
+            benefit.applicationProcess = null;
+        }
+    });
+    
+    // ドキュメントマップを初期化
+    initDocumentMap();
 });
 

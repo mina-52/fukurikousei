@@ -18,6 +18,7 @@
             <div class="tab-navigation">
                 <button class="tab-btn active" data-tab="profile">基本情報から探す</button>
                 <button class="tab-btn" data-tab="chat">会話で探す</button>
+                <button class="tab-btn" data-tab="document">ドキュメントマップ</button>
                 <button class="tab-btn" data-tab="analytics">検索分析</button>
             </div>
 
@@ -106,6 +107,67 @@
                 </div>
             </div>
 
+            <!-- ドキュメントマップタブ -->
+            <div class="tab-content" id="document-tab">
+                <div class="card">
+                    <h2>📚 福利厚生ドキュメントマップ</h2>
+                    <p class="doc-description">全24種類の福利厚生を一覧で確認できます。カテゴリ別フィルターや検索機能で素早く目的の福利厚生を見つけられます。</p>
+                    
+                    <!-- 検索とフィルター -->
+                    <div class="document-controls">
+                        <div class="search-container">
+                            <input type="text" id="doc-search" placeholder="🔍 福利厚生を検索... (例: 休暇、保険、育児)" />
+                        </div>
+                        
+                        <div class="filter-container">
+                            <label>カテゴリフィルター:</label>
+                            <select id="category-filter">
+                                <option value="all">すべて表示</option>
+                                <option value="給与">給与</option>
+                                <option value="日常">日常</option>
+                                <option value="住宅">住宅</option>
+                                <option value="業務">業務</option>
+                                <option value="休暇">休暇</option>
+                                <option value="将来設計">将来設計</option>
+                                <option value="ライフイベント">ライフイベント</option>
+                                <option value="保険">保険</option>
+                                <option value="健康">健康</option>
+                                <option value="育児">育児</option>
+                                <option value="レジャー">レジャー</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-container">
+                            <label>申し込み:</label>
+                            <select id="application-filter">
+                                <option value="all">すべて</option>
+                                <option value="required">申し込み必要</option>
+                                <option value="not-required">申し込み不要</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 統計情報 -->
+                    <div class="doc-stats">
+                        <div class="doc-stat-item">
+                            <span class="stat-number" id="total-benefits">24</span>
+                            <span class="stat-label">登録福利厚生</span>
+                        </div>
+                        <div class="doc-stat-item">
+                            <span class="stat-number" id="filtered-benefits">24</span>
+                            <span class="stat-label">表示中</span>
+                        </div>
+                        <div class="doc-stat-item">
+                            <span class="stat-number" id="application-required">7</span>
+                            <span class="stat-label">申し込み必要</span>
+                        </div>
+                    </div>
+
+                    <!-- カテゴリ別一覧 -->
+                    <div id="document-map" class="document-map"></div>
+                </div>
+            </div>
+
             <!-- 検索分析タブ -->
             <div class="tab-content" id="analytics-tab">
                 <div class="card">
@@ -156,6 +218,52 @@
                         <button id="clear-data" class="btn-danger">🗑️ データをクリア</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 申し込みモーダル -->
+    <div id="application-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeApplicationModal()">&times;</span>
+            <h2 id="modal-title">福利厚生の申し込み</h2>
+            <form id="application-form">
+                <div class="form-group">
+                    <label for="applicant-name">お名前</label>
+                    <input type="text" id="applicant-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicant-dept">所属部署</label>
+                    <input type="text" id="applicant-dept" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicant-email">メールアドレス</label>
+                    <input type="email" id="applicant-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicant-phone">電話番号</label>
+                    <input type="tel" id="applicant-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="application-notes">備考・その他</label>
+                    <textarea id="application-notes" rows="4" placeholder="ご質問や特記事項があればご記入ください"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">申し込む</button>
+                    <button type="button" class="btn-cancel" onclick="closeApplicationModal()">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 手続き方法モーダル -->
+    <div id="process-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeProcessModal()">&times;</span>
+            <h2 id="process-title">手続き方法</h2>
+            <div id="process-content"></div>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="closeProcessModal()">閉じる</button>
             </div>
         </div>
     </div>
