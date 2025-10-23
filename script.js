@@ -370,7 +370,7 @@ const benefitsDatabase = [
             ],
             deadline: "施設により異なる（通常は利用日の1週間前まで）",
             department: "ITS健保 または 人事部",
-            notes: "初回利用時はITS健保への登録が必要です。詳細は人事部にお問い合わせください。"
+            notes: "初回利用時はITS健保への登録が必要です。該当するサイトへ移動する。"
         }
     },
     {
@@ -672,7 +672,7 @@ function generateBotResponse(message) {
         response += `<span style="background: #d4ede7; color: #004D40; padding: 2px 8px; border-radius: 10px; font-size: 0.85em;">${benefit.category}</span><br><br>`;
     });
     
-    response += `<br>詳細や申請方法については人事部までお問い合わせください。<br>他にもお探しのものがあればお気軽にお聞きください！`;
+    response += `<br>詳細や申請方法については該当するサイトへ移動してください。<br>他にもお探しのものがあればお気軽にお聞きください！`;
     
     return response;
 }
@@ -975,7 +975,7 @@ function showApplicationProcess(benefitId) {
     } else {
         processContent.innerHTML = `
             <div class="process-info">
-                <p>この福利厚生は申し込み不要です。詳細については人事部にお問い合わせください。</p>
+                <p>この福利厚生は申し込み不要です。詳細については該当するサイトへ移動してください。</p>
             </div>
         `;
     }
@@ -1011,7 +1011,7 @@ function showBenefitInfo(benefitId) {
         </div>
         <div class="process-info">
             <h4>📞 お問い合わせ</h4>
-            <p>詳細については人事部までお問い合わせください。</p>
+            <p>詳細については該当するサイトへ移動してください。</p>
         </div>
     `;
     
