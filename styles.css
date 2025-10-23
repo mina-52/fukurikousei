@@ -1162,23 +1162,9 @@ header h1 {
 @media (max-width: 768px) {
     .back-to-site-btn {
         padding: 8px 12px;
-        font-size: 0.9em;
-    }
-    
-    .back-to-site-btn::after {
-        content: " 社員サイトに戻る";
-    }
-    
-    @media (max-width: 480px) {
-        .back-to-site-btn::after {
-            content: "";
-        }
-        
-        .back-to-site-btn {
-            padding: 8px 10px;
-            min-width: 40px;
-            justify-content: center;
-        }
+        font-size: 1.2em;
+        min-width: 40px;
+        justify-content: center;
     }
 }
 
